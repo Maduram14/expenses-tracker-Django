@@ -1,0 +1,50 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Expenses{% endblock %}
+{% block content %}
+<div class="topbar">
+  <h1>All Expenses</h1>
+  <a href="{% url 'expense_create' %}" class="btn">+ Add Expense</a>
+</div>
+
+<form method="get" class="filters card">
+  <input type="text" name="q" class="form-control" placeholder="Search title..." value="{{ search }}">
+  <select name="category" class="form-control">
+    <option value="">All Categories</option>
+    {% for c in categories %}
+    <option value="{{ c.id }}" {% if selected_category|slugify == c.id|slugify %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+  <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+  <button type="submit" class="btn btn-sm">Filter</button>
+  <a href="{% url 'expense_list' %}" class="btn btn-secondary btn-sm">Clear</a>
+</form>
+
+<div class="card">
+  <div style="margin-bottom:12px; color:var(--muted); font-size:14px;">
+    Total: <strong style="color:var(--text);">₹{{ total|floatformat:2 }}</strong> across {{ expenses|length }} expense(s)
+  </div>
+  {% if expenses %}
+  <table>
+    <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Payment</th><th style="text-align:right;">Amount</th><th></th></tr></thead>
+    <tbody>
+      {% for e in expenses %}
+      <tr>
+        <td>{{ e.title }}</td>
+        <td>{% if e.category %}<span class="badge" style="background:{{ e.category.color }};">{{ e.category.name }}</span>{% else %}—{% endif %}</td>
+        <td>{{ e.date }}</td>
+        <td>{{ e.get_payment_method_display }}</td>
+        <td style="text-align:right;">₹{{ e.amount }}</td>
+        <td>
+          <a href="{% url 'expense_update' e.pk %}" class="plain">Edit</a> ·
+          <a href="{% url 'expense_delete' e.pk %}" class="plain" style="color:var(--danger);">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No expenses match your filters.</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="topbar"><h1>Categories</h1></div>
+
+<div class="card" style="max-width:420px; margin-bottom:20px;">
+  <h3 style="margin-top:0;">Add Category</h3>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Name</th><th>Color</th><th># Expenses</th><th></th></tr></thead>
+    <tbody>
+      {% for c in categories %}
+      <tr>
+        <td>{{ c.name }}</td>
+        <td><span class="badge" style="background:{{ c.color }};">{{ c.color }}</span></td>
+        <td>{{ c.expense_count }}</td>
+        <td>
+          <form method="post" action="{% url 'category_delete' c.pk %}" onsubmit="return confirm('Delete this category?');" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="empty-state">No categories yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

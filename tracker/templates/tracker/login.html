@@ -1,0 +1,22 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div style="max-width:380px; margin:80px auto;">
+  <div class="card">
+    <h2 style="margin-top:0; text-align:center;">💰 ExpenseTrack</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn" style="width:100%;">Login</button>
+    </form>
+    <p style="text-align:center; margin-top:14px; font-size:14px;">
+      No account? <a href="{% url 'signup' %}" class="plain">Sign up</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

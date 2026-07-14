@@ -1,0 +1,18 @@
+{% extends 'tracker/base.html' %}
+{% block title %}Set Budget{% endblock %}
+{% block content %}
+<div class="topbar"><h1>Set Monthly Budget</h1></div>
+<div class="card" style="max-width:420px;">
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn">Save Budget</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}
